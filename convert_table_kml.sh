@@ -26,6 +26,14 @@ cat << EOF >> doc.kml
         </Icon>
       </IconStyle>
     </Style>
+    <Style id="icon-ci-2-labelson">
+      <IconStyle>
+        <scale>1.1</scale>
+        <Icon>
+          <href>images/icon-2.png</href>
+        </Icon>
+      </IconStyle>
+    </Style>
     <Folder>
       <name>SUPERCHARGER CCS</name>
 EOF
@@ -33,6 +41,7 @@ EOF
 
 #grep "> *0\? *CCS" data.kml | sed -e "s/> *CCS/> 0 CCS/" -e "s/STYLE/#icon-1899-C2185B/" -e "s/>/\n>/g" >> doc.kml
 grep -v "CCS: *0\? *<br" data.kml | sed -e "s/STYLE/#icon-ci-1-labelson/" >> doc.kml
+grep "CCS: *0\? *<br" data.kml | sed -e "s/STYLE/#icon-ci-2-labelson/" >> doc.kml
 
 
 
