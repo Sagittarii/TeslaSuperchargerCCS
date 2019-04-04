@@ -8,7 +8,8 @@ mkdir -p backup
 cp data.tsv backup/$(date +%Y%m%d_%H%M%S)_data.tsv
 
 # Remove headers from data.tsv
-sed -i data.tsv -e "1,6d"
+sed -i data.tsv -e "1,6d" # remove headers
+sed  -n '/^[^\t]/p' -i data.tsv # remove empty lines (starting with \t, as country column is empty
 
 #cat data.tsv | awk -F'\t' '{print $2, $5, $4, $9, $8}' 
 #cat data.tsv | awk -F'\t' '{print "<name>",$2,"</name><description>","$5," CCS / ",$4," total</description><Point>",$9,",",$8,"</Point>"}' 
