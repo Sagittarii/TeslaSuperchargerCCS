@@ -4,12 +4,15 @@
 curl "https://docs.google.com/spreadsheets/d/1N7CjkpUITPmj3ObOvTZnH8AtgmsinqOJ_ZR2MNJFnVI/export?format=tsv&id=1N7CjkpUITPmj3ObOvTZnH8AtgmsinqOJ_ZR2MNJFnVI&gid=0" -o data.tsv
 
 
+mkdir -p backup
+cp data.tsv backup/$(date +%Y%m%d_%H%M%S)_data.tsv
+
 # Remove headers from data.tsv
 sed -i data.tsv -e "1,6d"
 
 #cat data.tsv | awk -F'\t' '{print $2, $5, $4, $9, $8}' 
 #cat data.tsv | awk -F'\t' '{print "<name>",$2,"</name><description>","$5," CCS / ",$4," total</description><Point>",$9,",",$8,"</Point>"}' 
-cat data.tsv | awk -F'\t' '{print "<Placemark><name>",$3,"</name><description><![CDATA[CCS: ",$5," / ", $4,"<br>Address: ",$3,"<br>Country: ",$1,"]]></description><styleUrl>STYLE</styleUrl><ExtendedData><Data name=\"CCS\"><value>",$5,"</value></Data><Data name=\"Total\"><value>",$4,"</value></Data><Data name=\"Address\"><value>",$3,"</value></Data><Data name=\"Country\"><value>",$1,"</value></Data></ExtendedData><Point><coordinates>",$9,",0</coordinates></Point></Placemark>"}' | sed -e "s/\([0-9.\-]\+\) *, *\([0-9.\-]\+\) *, *0/\2, \1, 0/"> data.kml
+cat data.tsv | awk -F'\t' '{print "<Placemark><name>",$3,"</name><description><![CDATA[CCS: ",$5," / ", $4,"<br>Address: ",$3,"<br>Country: ",$1,"]]></description><styleUrl>STYLE</styleUrl><ExtendedData><Data name=\"CCS\"><value>",$5,"</value></Data><Data name=\"Total\"><value>",$4,"</value></Data><Data name=\"Address\"><value>",$3,"</value></Data><Data name=\"Country\"><value>",$1,"</value></Data></ExtendedData><Point><coordinates>",$12,",0</coordinates></Point></Placemark>"}' | sed -e "s/\([0-9.\-]\+\) *, *\([0-9.\-]\+\) *, *0/\2, \1, 0/"> data.kml
 
 rm -f doc.kml
 cat << EOF >> doc.kml
@@ -63,6 +66,7 @@ EOF
 
 zip 'TESLA CCS SUPERCHARGERS.kmz' doc.kml images/*
 
+cp doc.kml backup/$(date +%Y%m%d_%H%M%S)_doc.kml
 
 
 xmllint doc.kml -noout
